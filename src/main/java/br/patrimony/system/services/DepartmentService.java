@@ -44,20 +44,4 @@ public class DepartmentService {
         return ResponseEntity.ok(departmentRepository.save(newDepartment));
     }
 
-    public ResponseEntity getAllDepartmentFromBuilding(@PathVariable(value = "id") Long id){
-        List<Department> departmentList = departmentRepository.findAllByBuildingId(id);
-        return ResponseEntity.ok().body(departmentList);
-    }
-
-    public ResponseEntity getOneDepartmentFromBuilding(@PathVariable String buildingName, String departmentName){
-        var building = buildingRepository.findByName(buildingName);
-        var department = departmentRepository.findByName(departmentName);
-
-        if(building == null || department == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("erro");
-        }
-
-        var response = departmentRepository.findByNameAndBuilding(departmentName, building);
-        return ResponseEntity.ok().body(response);
-    }
 }

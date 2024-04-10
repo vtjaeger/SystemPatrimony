@@ -27,4 +27,14 @@ public class BuildingController {
     public ResponseEntity getOneBuilding(@PathVariable(value = "id") Long id){
         return buildingService.getOneBuilding(id);
     }
+
+    @GetMapping("/{buildingName}/{departmentName}")
+    public ResponseEntity getOneDepartmentFromBuilding(@PathVariable String buildingName, @PathVariable String departmentName){
+        return buildingService.getOneDepartmentFromBuilding(buildingName, departmentName);
+    }
+
+    @GetMapping("/all/{id}")
+    public ResponseEntity getAllDepartmentFromBuilding(@PathVariable(value = "id") Long id){
+        return buildingService.getAllDepartmentFromBuilding(id);
+    }
 }

@@ -2,7 +2,9 @@ package br.patrimony.system.services;
 
 import br.patrimony.system.dtos.building.BuildingRequest;
 import br.patrimony.system.models.Building;
+import br.patrimony.system.models.Department;
 import br.patrimony.system.repositories.BuildingRepository;
+import br.patrimony.system.repositories.DepartmentRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,9 @@ import java.util.List;
 public class BuildingService {
     @Autowired
     private BuildingRepository buildingRepository;
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
     public ResponseEntity registerBuilding(@RequestBody @Valid BuildingRequest buildingRequest){
         if(buildingRepository.existsByName(buildingRequest.name())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Building already registered");
@@ -38,5 +43,22 @@ public class BuildingService {
             return ResponseEntity.ok().body(building);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Building not found");
+    }
+
+    public ResponseEntity getOneDepartmentFromBuilding(@PathVariable String buildingName, String departmentName){
+        var building = buildingRepository.findByName(buildingName);
+        var department = departmentRepository.findByName(departmentName);
+
+        if(building == null || department == null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("erro");
+        }
+
+        var response = departmentRepository.findByNameAndBuilding(departmentName, building);
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity getAllDepartmentFromBuilding(@PathVariable(value = "id") Long id){
+        List<Department> departmentList = departmentRepository.findAllByBuildingId(id);
+        return ResponseEntity.ok().body(departmentList);
     }
 }
