@@ -1,5 +1,6 @@
 package br.patrimony.system.models;
 
+import br.patrimony.system.dtos.patrimony.PatrimonyRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,6 +21,18 @@ public class Patrimony {
     private String responsible;
     private LocalDate acquisitionDate;
     private String numberInvoice;
+
+    public Patrimony(PatrimonyRequest patrimonyRequest, Building building, Department department) {
+        this.object = patrimonyRequest.object();
+        this.building = building;
+        this.department = department;
+        this.responsible = null;
+        this.acquisitionDate = null;
+        this.numberInvoice = null;
+    }
+
+    public Patrimony() {
+    }
 
     public Long getId() {
         return id;

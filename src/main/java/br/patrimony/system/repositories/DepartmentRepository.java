@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-    Department existsByName(String name);
+    Boolean existsByName(String name);
     boolean existsByNameAndBuilding(String name, Building building);
 
     //list pq retorna esse metodo retorna uma lista, mesmo que for so um setor
