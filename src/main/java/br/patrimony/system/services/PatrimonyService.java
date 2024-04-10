@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -57,5 +58,30 @@ public class PatrimonyService {
     public ResponseEntity getAllPatrimony(){
         List<Patrimony> patrimonyList = patrimonyRepository.findAll();
         return ResponseEntity.ok().body(patrimonyList);
+    }
+
+    public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
+                                                        //nullable pq pode retornar null
+        Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
+        Optional<Department> departmentOptional = Optional.ofNullable(departmentRepository.findByName(departmentName));
+
+        if (buildingOptional.isEmpty() || departmentOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+        }
+
+        var building = buildingOptional.get();
+        var department = departmentOptional.get();
+
+        List<Patrimony> patrimonyList = patrimonyRepository.findAllByBuildingAndDepartment(building, department);
+        return ResponseEntity.ok().body(patrimonyList);
+    }
+
+    public ResponseEntity getByPatrimonyName(@PathVariable String patrimonyName){
+        Optional<Patrimony> patrimonyOptional = Optional.ofNullable(patrimonyRepository.findByObject(patrimonyName));
+        if(patrimonyOptional.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("patrimony not found");
+        }
+        var patrimony = patrimonyOptional.get();
+        return ResponseEntity.ok().body(patrimony);
     }
 }
