@@ -33,4 +33,9 @@ public class Building {
 
     public Building() {
     }
+
+    public Building(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

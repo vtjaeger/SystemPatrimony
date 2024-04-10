@@ -1,5 +1,6 @@
 package br.patrimony.system.models;
 
+import br.patrimony.system.dtos.department.DepartmentRequest;
 import jakarta.persistence.*;
 
 @Entity
@@ -9,6 +10,17 @@ public class Department {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "building_id")
+    private Building building;
+
+    public Department(String name, Building building) {
+        this.name = name;
+        this.building = building;
+    }
+
+    public Department() {
+    }
 
     public Long getId() {
         return id;
@@ -25,4 +37,14 @@ public class Department {
     public void setName(String name) {
         this.name = name;
     }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
+    }
+
+
 }
