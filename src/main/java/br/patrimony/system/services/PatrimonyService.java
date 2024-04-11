@@ -1,7 +1,7 @@
 package br.patrimony.system.services;
 
 import br.patrimony.system.dtos.requests.patrimony.PatrimonyRequest;
-import br.patrimony.system.dtos.responses.PatrimonyResponse;
+import br.patrimony.system.dtos.responses.patrimony.PatrimonyResponse;
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;
 import br.patrimony.system.models.Patrimony;
@@ -52,7 +52,15 @@ public class PatrimonyService {
         var department = departmentOptional.get();
 
         var newPatrimony = new Patrimony(patrimonyRequest, building, department);
-        return ResponseEntity.ok().body(patrimonyRepository.save(newPatrimony));
+        patrimonyRepository.save(newPatrimony);
+
+        PatrimonyResponse response = new PatrimonyResponse(
+                newPatrimony.getId(),
+                newPatrimony.getObject(),
+                newPatrimony.getBuilding().getName(),
+                newPatrimony.getDepartment().getName()
+        );
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity getAllPatrimony(){

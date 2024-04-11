@@ -36,7 +36,7 @@ public class DepartmentService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department already registered");
         }
 
-        Department newDepartment = new Department(departmentName, building);
+        Department newDepartment = new Department(departmentName, building, null);
         return ResponseEntity.ok(departmentRepository.save(newDepartment));
     }
 

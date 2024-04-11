@@ -1,6 +1,9 @@
 package br.patrimony.system.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_department")
@@ -13,9 +16,14 @@ public class Department {
     @JoinColumn(name = "building_id")
     private Building building;
 
-    public Department(String name, Building building) {
+    @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
+    @JsonIgnore // nao repetir infinitas vezes
+    private List<Patrimony> patrimonies;
+
+    public Department(String name, Building building, List<Patrimony> patrimonies) {
         this.name = name;
         this.building = building;
+        this.patrimonies = patrimonies;
     }
 
     public Department() {
@@ -45,5 +53,11 @@ public class Department {
         this.building = building;
     }
 
+    public List<Patrimony> getPatrimonies() {
+        return patrimonies;
+    }
 
+    public void setPatrimonies(List<Patrimony> patrimonies) {
+        this.patrimonies = patrimonies;
+    }
 }

@@ -1,7 +1,10 @@
 package br.patrimony.system.models;
 
 import br.patrimony.system.dtos.requests.building.BuildingRequest;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_building")
@@ -10,6 +13,10 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Department> departments;
 
     public Long getId() {
         return id;
@@ -34,8 +41,17 @@ public class Building {
     public Building() {
     }
 
-    public Building(Long id, String name) {
+    public Building(Long id, String name, List<Department> departments) {
         this.id = id;
         this.name = name;
+        this.departments = departments;
+    }
+
+    public List<Department> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<Department> departments) {
+        this.departments = departments;
     }
 }
