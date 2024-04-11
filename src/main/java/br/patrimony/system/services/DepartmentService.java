@@ -1,16 +1,25 @@
 package br.patrimony.system.services;
 
 import br.patrimony.system.dtos.requests.department.DepartmentRequest;
+import br.patrimony.system.dtos.responses.department.DepartmentResponse;
+import br.patrimony.system.dtos.responses.patrimony.PatrimonyIdNameResponse;
+import br.patrimony.system.dtos.responses.patrimony.PatrimonyResponse;
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;
+import br.patrimony.system.models.Patrimony;
 import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.DepartmentRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -38,6 +47,27 @@ public class DepartmentService {
 
         Department newDepartment = new Department(departmentName, building, null);
         return ResponseEntity.ok(departmentRepository.save(newDepartment));
+    }
+
+    public ResponseEntity getAllDepartmentsResponse(){
+        List<Department> departments = departmentRepository.findAll();
+        List<DepartmentResponse> response = departments.stream()
+                .map(department -> {
+                    List<Patrimony> patrimonies = department.getPatrimonies();
+                    List<PatrimonyIdNameResponse> patrimonyResponse = patrimonies.stream()
+                            .map(patrimony -> new PatrimonyIdNameResponse(patrimony.getId(), patrimony.getObject()))
+                            .collect(Collectors.toList());
+
+                    return new DepartmentResponse(
+                            department.getBuilding().getId(),
+                            department.getBuilding().getName(),
+                            department.getName(),
+                            patrimonyResponse
+                            );
+                })
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(response);
     }
 
 }

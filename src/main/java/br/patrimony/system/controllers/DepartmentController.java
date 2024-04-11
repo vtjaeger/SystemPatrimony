@@ -18,4 +18,8 @@ public class DepartmentController {
         return departmentService.registerDepartment(departmentRequest);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity getAllDepartments() {
+        return departmentService.getAllDepartmentsResponse();
+    }
 }
