@@ -1,6 +1,7 @@
 package br.patrimony.system.services;
 
-import br.patrimony.system.dtos.patrimony.PatrimonyRequest;
+import br.patrimony.system.dtos.requests.patrimony.PatrimonyRequest;
+import br.patrimony.system.dtos.responses.PatrimonyResponse;
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;
 import br.patrimony.system.models.Patrimony;
@@ -8,9 +9,7 @@ import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.DepartmentRepository;
 import br.patrimony.system.repositories.PatrimonyRepository;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatrimonyService {
@@ -57,7 +57,16 @@ public class PatrimonyService {
 
     public ResponseEntity getAllPatrimony(){
         List<Patrimony> patrimonyList = patrimonyRepository.findAll();
-        return ResponseEntity.ok().body(patrimonyList);
+
+        List<PatrimonyResponse> response = patrimonyList.stream()
+                .map(patrimony -> new PatrimonyResponse(
+                        patrimony.getId(),
+                        patrimony.getObject(),
+                        patrimony.getBuilding().getName(),
+                        patrimony.getDepartment().getName()))
+                .collect(Collectors.toList());;
+
+        return ResponseEntity.ok().body(response);
     }
 
     public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
@@ -73,7 +82,16 @@ public class PatrimonyService {
         var department = departmentOptional.get();
 
         List<Patrimony> patrimonyList = patrimonyRepository.findAllByBuildingAndDepartment(building, department);
-        return ResponseEntity.ok().body(patrimonyList);
+
+        List<PatrimonyResponse> patrimonyResponses = patrimonyList.stream()
+                .map(patrimony -> new PatrimonyResponse(
+                        patrimony.getId(),
+                        patrimony.getObject(),
+                        patrimony.getBuilding().getName(),
+                        patrimony.getDepartment().getName()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(patrimonyResponses);
     }
 
     public ResponseEntity getByPatrimonyName(@PathVariable String patrimonyName){
@@ -82,6 +100,9 @@ public class PatrimonyService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("patrimony not found");
         }
         var patrimony = patrimonyOptional.get();
-        return ResponseEntity.ok().body(patrimony);
+        var response = new PatrimonyResponse(patrimony.getId(), patrimony.getObject(), patrimony.getBuilding().getName(),
+                patrimony.getDepartment().getName());
+
+        return ResponseEntity.ok().body(response);
     }
 }

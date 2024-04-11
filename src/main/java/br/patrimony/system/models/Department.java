@@ -1,6 +1,5 @@
 package br.patrimony.system.models;
 
-import br.patrimony.system.dtos.department.DepartmentRequest;
 import jakarta.persistence.*;
 
 @Entity

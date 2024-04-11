@@ -1,4 +1,4 @@
-package br.patrimony.system.dtos.patrimony;
+package br.patrimony.system.dtos.requests.patrimony;
 
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;

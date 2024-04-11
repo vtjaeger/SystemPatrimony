@@ -1,4 +1,4 @@
-package br.patrimony.system.dtos.department;
+package br.patrimony.system.dtos.requests.department;
 
 import br.patrimony.system.models.Building;
 import jakarta.validation.constraints.NotBlank;

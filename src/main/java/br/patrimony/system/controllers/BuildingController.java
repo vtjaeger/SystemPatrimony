@@ -1,6 +1,6 @@
 package br.patrimony.system.controllers;
 
-import br.patrimony.system.dtos.building.BuildingRequest;
+import br.patrimony.system.dtos.requests.building.BuildingRequest;
 import br.patrimony.system.services.BuildingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

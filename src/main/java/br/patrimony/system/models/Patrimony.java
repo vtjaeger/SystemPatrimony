@@ -1,6 +1,6 @@
 package br.patrimony.system.models;
 
-import br.patrimony.system.dtos.patrimony.PatrimonyRequest;
+import br.patrimony.system.dtos.requests.patrimony.PatrimonyRequest;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
