@@ -3,20 +3,16 @@ package br.patrimony.system.services;
 import br.patrimony.system.dtos.requests.department.DepartmentRequest;
 import br.patrimony.system.dtos.responses.department.DepartmentResponse;
 import br.patrimony.system.dtos.responses.patrimony.PatrimonyIdNameResponse;
-import br.patrimony.system.dtos.responses.patrimony.PatrimonyResponse;
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;
 import br.patrimony.system.models.Patrimony;
 import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.DepartmentRepository;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,14 +31,14 @@ public class DepartmentService {
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
 
         if (buildingOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Building not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("building not found");
         }
 
         Building building = buildingOptional.get();
         String departmentName = departmentRequest.name();
 
         if (departmentRepository.existsByNameAndBuilding(departmentName, building)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Department already registered");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("department already registered");
         }
 
         Department newDepartment = new Department(departmentName, building, null);

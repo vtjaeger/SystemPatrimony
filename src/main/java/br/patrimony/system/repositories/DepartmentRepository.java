@@ -9,13 +9,9 @@ import java.util.List;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-    Boolean existsByName(String name);
     boolean existsByNameAndBuilding(String name, Building building);
-
-    //list pq retorna esse metodo retorna uma lista, mesmo que for so um setor
-    List<Department> findAllByBuildingId(Long id);
-
-    Department findByName(String name);
-    Department findByNameAndBuilding(String departmentName, Building building);
+    
+    //lista pq existem departamentos com nomes iguais
+    List<Department> findAllByName(String name);
 
 }

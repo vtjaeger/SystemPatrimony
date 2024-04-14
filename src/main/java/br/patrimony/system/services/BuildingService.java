@@ -5,8 +5,6 @@ import br.patrimony.system.dtos.responses.building.BuildingDepartmentResponse;
 import br.patrimony.system.models.Building;
 import br.patrimony.system.models.Department;
 import br.patrimony.system.repositories.BuildingRepository;
-import br.patrimony.system.repositories.DepartmentRepository;
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,7 +25,7 @@ public class BuildingService {
 
     public ResponseEntity registerBuilding(@RequestBody @Valid BuildingRequest buildingRequest){
         if(buildingRepository.existsByName(buildingRequest.name())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Building already registered");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("building already registered");
         }
         var newBuilding = new Building(buildingRequest);
         return ResponseEntity.ok().body(buildingRepository.save(newBuilding));
@@ -59,7 +56,7 @@ public class BuildingService {
     public ResponseEntity getOneBuilding(@PathVariable(value = "id") Long id) {
         Optional<Building> buildingOptional = buildingRepository.findById(id);
         if (buildingOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Building not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building not found");
         }
 
         Building building = buildingOptional.get();

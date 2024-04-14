@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,28 +31,33 @@ public class PatrimonyService {
     private BuildingRepository buildingRepository;
 
     public ResponseEntity registerPatrimony(@RequestBody @Valid PatrimonyRequest patrimonyRequest){
-
-        boolean existBuilding = buildingRepository.existsByName(patrimonyRequest.building());
-        boolean existDepartment = departmentRepository.existsByName(patrimonyRequest.department());
-
-        if(!existBuilding || !existDepartment){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("not found");
-        }
-
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(patrimonyRequest.building()));
-        Optional<Department> departmentOptional = Optional.ofNullable(departmentRepository.findByName(patrimonyRequest.department()));
+        List<Department> departments = departmentRepository.findAllByName(patrimonyRequest.department());
 
-        if (buildingOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building not found");
-        }
-        if(departmentOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("department not found");
+        if (buildingOptional.isEmpty() || departments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building or department not found");
         }
 
         var building = buildingOptional.get();
-        var department = departmentOptional.get();
 
-        var newPatrimony = new Patrimony(patrimonyRequest, building, department);
+        Department departamentoCorreto = null;
+
+        if(departments.size() > 1){
+            for(Department department : departments){
+                if(department.getBuilding().getId().equals(building.getId())){
+                    departamentoCorreto = department;
+                    break;
+                }
+            }
+        } if (departments.size() == 1) {
+            departamentoCorreto = departments.get(0);
+        }
+
+        if (!building.getDepartments().contains(departamentoCorreto)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("department not found in this building");
+        }
+
+        var newPatrimony = new Patrimony(patrimonyRequest, building, departamentoCorreto);
         patrimonyRepository.save(newPatrimony);
 
         PatrimonyResponse response = new PatrimonyResponse(
@@ -78,18 +84,31 @@ public class PatrimonyService {
     }
 
     public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
-                                                        //nullable pq pode retornar null
+        // nullable pq pode retornar null
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
-        Optional<Department> departmentOptional = Optional.ofNullable(departmentRepository.findByName(departmentName));
+        List<Department> departments = departmentRepository.findAllByName(departmentName);
 
-        if (buildingOptional.isEmpty() || departmentOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+        if (buildingOptional.isEmpty() || departments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building or department not found");
         }
 
-        var building = buildingOptional.get();
-        var department = departmentOptional.get();
+        Building building = buildingOptional.get();
 
-        List<Patrimony> patrimonyList = patrimonyRepository.findAllByBuildingAndDepartment(building, department);
+        // filtrar lista de departamentos para o building passado
+        List<Department> filteredDepartments = departments.stream()
+                .filter(department -> department.getBuilding().equals(building))
+                .collect(Collectors.toList());
+
+        if (filteredDepartments.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("department not found this building");
+        }
+
+        List<Patrimony> patrimonyList = new ArrayList<>();
+
+        for (Department department : filteredDepartments) {
+            List<Patrimony> departmentPatrimonies = patrimonyRepository.findAllByBuildingAndDepartment(building, department);
+            patrimonyList.addAll(departmentPatrimonies);
+        }
 
         List<PatrimonyResponse> patrimonyResponses = patrimonyList.stream()
                 .map(patrimony -> new PatrimonyResponse(
