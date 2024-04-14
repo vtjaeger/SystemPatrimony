@@ -27,8 +27,8 @@ public class DepartmentService {
     public ResponseEntity registerDepartment(DepartmentRequest departmentRequest) {
         String buildingName = departmentRequest.buildingName();
                                                         //retorna um valor se for diferente de null.
-                                                        // usar pq findByName pode retornar null
-        Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName.toUpperCase()));
+                                                        // usar Optional pq findByName pode retornar null
+        Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
 
         if (buildingOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("building not found");

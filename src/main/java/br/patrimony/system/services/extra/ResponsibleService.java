@@ -9,18 +9,15 @@ public class ResponsibleService {
     private final HashMap<String, String> departmentRoles = new HashMap<>();
 
     public ResponsibleService() {
-        departmentRoles.put("cq", "Assistente");
-        departmentRoles.put("gq", "Gestor");
-        departmentRoles.put("ti", "Direcao");
-        departmentRoles.put("expedicao", "teste");
+        departmentRoles.put("CQ", "Inspetor CQ");
+        departmentRoles.put("GQ", "Coordenador GQ");
+        departmentRoles.put("TI", "Tecnico TI");
+        departmentRoles.put("PRODUCAO", "Lider Producao");
+        departmentRoles.put("LOG", "Coordenador Logistica");
+        departmentRoles.put("EXP", "Gestor Expedicao");
     }
 
     public String determinateResponsible(String departmentName){
-        if(departmentRoles.containsKey(departmentName)){
-            return departmentRoles.get(departmentName);
-        }
-        else {
-            return "Erro";
-        }
+        return departmentRoles.getOrDefault(departmentName, "Direcao");
     }
 }

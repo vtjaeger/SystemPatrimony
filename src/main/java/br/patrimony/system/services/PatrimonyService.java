@@ -71,7 +71,8 @@ public class PatrimonyService {
                 newPatrimony.getId(),
                 newPatrimony.getObject(),
                 newPatrimony.getBuilding().getName(),
-                newPatrimony.getDepartment().getName()
+                newPatrimony.getDepartment().getName(),
+                newPatrimony.getResponsible()
         );
         return ResponseEntity.ok().body(response);
     }
@@ -84,7 +85,8 @@ public class PatrimonyService {
                         patrimony.getId(),
                         patrimony.getObject(),
                         patrimony.getBuilding().getName(),
-                        patrimony.getDepartment().getName()))
+                        patrimony.getDepartment().getName(),
+                        patrimony.getResponsible()))
                 .collect(Collectors.toList());;
 
         return ResponseEntity.ok().body(response);
@@ -122,7 +124,8 @@ public class PatrimonyService {
                         patrimony.getId(),
                         patrimony.getObject(),
                         patrimony.getBuilding().getName(),
-                        patrimony.getDepartment().getName()))
+                        patrimony.getDepartment().getName(),
+                        patrimony.getResponsible()))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(patrimonyResponses);
@@ -135,7 +138,7 @@ public class PatrimonyService {
         }
         var patrimony = patrimonyOptional.get();
         var response = new PatrimonyResponse(patrimony.getId(), patrimony.getObject(), patrimony.getBuilding().getName(),
-                patrimony.getDepartment().getName());
+                patrimony.getDepartment().getName(), patrimony.getResponsible());
 
         return ResponseEntity.ok().body(response);
     }
