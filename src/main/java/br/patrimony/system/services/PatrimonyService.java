@@ -8,6 +8,7 @@ import br.patrimony.system.models.Patrimony;
 import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.DepartmentRepository;
 import br.patrimony.system.repositories.PatrimonyRepository;
+import br.patrimony.system.services.extra.ResponsibleService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,8 @@ public class PatrimonyService {
     private DepartmentRepository departmentRepository;
     @Autowired
     private BuildingRepository buildingRepository;
+    @Autowired
+    private ResponsibleService responsibleService;
 
     public ResponseEntity registerPatrimony(@RequestBody @Valid PatrimonyRequest patrimonyRequest){
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(patrimonyRequest.building()));
@@ -57,7 +60,11 @@ public class PatrimonyService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("department not found in this building");
         }
 
+        var responsible = responsibleService.determinateResponsible(departamentoCorreto.getName());
+
         var newPatrimony = new Patrimony(patrimonyRequest, building, departamentoCorreto);
+        newPatrimony.setResponsible(responsible);
+
         patrimonyRepository.save(newPatrimony);
 
         PatrimonyResponse response = new PatrimonyResponse(

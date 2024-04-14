@@ -1,16 +1,14 @@
 package br.patrimony.system.services;
 
 import br.patrimony.system.dtos.requests.user.UserRequest;
-import br.patrimony.system.dtos.responses.UserResponse;
+import br.patrimony.system.dtos.responses.user.UserResponse;
 import br.patrimony.system.models.Role;
 import br.patrimony.system.models.User;
 import br.patrimony.system.repositories.RoleRepository;
 import br.patrimony.system.repositories.UserRepository;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;

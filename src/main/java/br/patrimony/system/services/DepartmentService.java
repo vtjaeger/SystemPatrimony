@@ -28,14 +28,14 @@ public class DepartmentService {
         String buildingName = departmentRequest.buildingName();
                                                         //retorna um valor se for diferente de null.
                                                         // usar pq findByName pode retornar null
-        Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
+        Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName.toUpperCase()));
 
         if (buildingOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("building not found");
         }
 
         Building building = buildingOptional.get();
-        String departmentName = departmentRequest.name();
+        String departmentName = departmentRequest.name().toUpperCase();
 
         if (departmentRepository.existsByNameAndBuilding(departmentName, building)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("department already registered");
@@ -57,7 +57,7 @@ public class DepartmentService {
                     return new DepartmentResponse(
                             department.getBuilding().getId(),
                             department.getBuilding().getName(),
-                            department.getName(),
+                            department.getName().toUpperCase(),
                             patrimonyResponse
                             );
                 })
