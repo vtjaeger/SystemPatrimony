@@ -18,6 +18,7 @@ public class ResponsibleService {
     }
 
     public String determinateResponsible(String departmentName){
+        //se o setor tiver no hash acima, se nao direcao
         return departmentRoles.getOrDefault(departmentName, "Direcao");
     }
 }

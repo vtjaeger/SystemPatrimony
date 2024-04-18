@@ -27,7 +27,7 @@ public class UserService {
     public ResponseEntity registerUser(@RequestBody @Valid UserRequest userRequest){
         Optional<Role> roleOptional = Optional.ofNullable(roleRepository.findByFunction(userRequest.role()));
         if(roleOptional.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("cargo not found");
         }
 
         Role role = roleOptional.get();

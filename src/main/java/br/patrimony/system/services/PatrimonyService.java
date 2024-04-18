@@ -95,7 +95,7 @@ public class PatrimonyService {
     public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
         // nullable pq pode retornar null
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(buildingName));
-        List<Department> departments = departmentRepository.findAllByName(departmentName);
+        List<Department> departments = departmentRepository.findAllByName(departmentName.toUpperCase());
 
         if (buildingOptional.isEmpty() || departments.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building or department not found");
