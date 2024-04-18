@@ -35,7 +35,7 @@ public class PatrimonyService {
 
     public ResponseEntity registerPatrimony(@RequestBody @Valid PatrimonyRequest patrimonyRequest){
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(patrimonyRequest.building()));
-        List<Department> departments = departmentRepository.findAllByName(patrimonyRequest.department());
+        List<Department> departments = departmentRepository.findAllByName(patrimonyRequest.department().toUpperCase());
 
         if (buildingOptional.isEmpty() || departments.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("building or department not found");
