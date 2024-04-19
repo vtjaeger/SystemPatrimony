@@ -6,6 +6,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -46,11 +47,61 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
-        } else {
-            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        switch (this.role) {
+            case ADMIN:
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+
+            case MANAGER:
+                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+
+            case COORDINATOR:
+                authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+
+            case SPECIALIST:
+                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+
+            case ANALYST:
+                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+
+            case ASSISTANT:
+                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
+            default:
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                break;
         }
+
+        return authorities;
     }
 
     public String getPassword() {
