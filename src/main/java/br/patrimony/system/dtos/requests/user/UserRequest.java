@@ -1,4 +1,6 @@
 package br.patrimony.system.dtos.requests.user;
 
-public record UserRequest(String login, String password, String role) {
+import br.patrimony.system.models.UserRole;
+
+public record UserRequest(String login, String password, UserRole role) {
 }

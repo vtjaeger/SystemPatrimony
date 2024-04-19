@@ -6,10 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "tb_user")
@@ -19,15 +17,13 @@ public class User implements UserDetails {
     private Long id;
     private String login;
     private String password;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    private UserRole role;
 
     public User() {
     }
 
-    public User(UserRequest userRequest, String password, Role role) {
-        this.login = userRequest.login();
+    public User(String login, String password, UserRole role) {
+        this.login = login;
         this.password = password;
         this.role = role;
     }
@@ -50,10 +46,10 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(Objects.equals(this.role.getFunction(), "ADMIN")){
-            return List.of(new SimpleGrantedAuthority("ADMIN"), new SimpleGrantedAuthority("USER"));
+        if(this.role == UserRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         } else {
-            return List.of(new SimpleGrantedAuthority("USER"));
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
         }
     }
 
@@ -90,11 +86,11 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 }

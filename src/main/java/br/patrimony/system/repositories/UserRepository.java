@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    List<User> findByRoleId(Long id);
+//    List<User> findByRoleId(Long id);
     UserDetails findByLogin(String login);
 }
