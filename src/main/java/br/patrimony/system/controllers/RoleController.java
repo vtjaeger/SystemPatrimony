@@ -1,5 +1,6 @@
 package br.patrimony.system.controllers;
 
+import br.patrimony.system.dtos.responses.user.UserResponse;
 import br.patrimony.system.models.Role;
 import br.patrimony.system.models.User;
 import br.patrimony.system.repositories.RoleRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("role")
@@ -34,6 +36,10 @@ public class RoleController {
         if(users.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("nobody on this role");
         }
-        return ResponseEntity.ok().body(users);
+
+        List<UserResponse> response = users.stream()
+                .map(user -> new UserResponse(user.getId(), user.getLogin(), user.getRole().getFunction()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok().body(response);
     }
 }

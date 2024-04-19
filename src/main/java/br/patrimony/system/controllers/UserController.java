@@ -13,11 +13,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @PostMapping
-    public ResponseEntity registerUser(@RequestBody @Valid UserRequest userRequest){
-        return userService.registerUser(userRequest);
-    }
-
     @GetMapping
     public ResponseEntity getAllUsers(){
         return userService.getAllUser();

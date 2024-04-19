@@ -1,4 +1,4 @@
 package br.patrimony.system.dtos.responses.user;
 
-public record UserResponse(String name, String role) {
+public record UserResponse(Long id, String login, String role) {
 }

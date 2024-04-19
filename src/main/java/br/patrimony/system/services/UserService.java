@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,25 +21,26 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     public ResponseEntity registerUser(@RequestBody @Valid UserRequest userRequest){
         Optional<Role> roleOptional = Optional.ofNullable(roleRepository.findByFunction(userRequest.role()));
         if(roleOptional.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("cargo not found");
         }
-
+        String encrypted = new BCryptPasswordEncoder().encode(userRequest.password());
         Role role = roleOptional.get();
-        var user = new User(userRequest, role);
+
+        var user = new User(userRequest, encrypted, role);
         return ResponseEntity.ok().body(userRepository.save(user));
     }
 
     public ResponseEntity getAllUser(){
         List<User> userList = userRepository.findAll();
         List<UserResponse> response = userList.stream()
-                .map(user -> new UserResponse(user.getName(), user.getRole().getFunction()))
+                .map(user -> new UserResponse(user.getId(), user.getLogin(), user.getRole().getFunction()))
                 .collect(Collectors.toList());
         return ResponseEntity.ok().body(response);
     }
