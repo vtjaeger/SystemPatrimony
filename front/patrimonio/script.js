@@ -25,13 +25,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .then(userData => {
             console.log('Dados do usuário:', userData);
             const isAdmin = userData.some(user => user.username === loginSalvo && user.role === 'ADMIN');
+
             if (isAdmin) {
                 console.log('Admin');
                 const btnAddPatrimonio = document.querySelector('.btnAddPatrimonio');
+                
                 if (btnAddPatrimonio) {
                     btnAddPatrimonio.addEventListener('click', redirectToAdicionarPatrimonio);
-                } else {
-                    console.error('Botão de adicionar patrimônio não encontrado.');
                 }
             } else {
                 console.log('Não é admin');
