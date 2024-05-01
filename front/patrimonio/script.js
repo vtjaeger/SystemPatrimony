@@ -1,3 +1,7 @@
+//user logado
+const loginSalvo = localStorage.getItem('login');
+console.log('Login salvo:', loginSalvo);
+
 document.addEventListener('DOMContentLoaded', () => {
     // token no localstorage
     const token = localStorage.getItem('token');
@@ -7,6 +11,35 @@ document.addEventListener('DOMContentLoaded', () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         };
+
+        fetch('http://localhost:8080/user', {
+            method: 'GET',
+            headers: headers
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro ao obter dados do usuário');
+            }
+            return response.json();
+        })
+        .then(userData => {
+            console.log('Dados do usuário:', userData);
+            const isAdmin = userData.some(user => user.username === loginSalvo && user.role === 'ADMIN');
+            if (isAdmin) {
+                console.log('Admin');
+                const btnAddPatrimonio = document.querySelector('.btnAddPatrimonio');
+                if (btnAddPatrimonio) {
+                    btnAddPatrimonio.addEventListener('click', redirectToAdicionarPatrimonio);
+                } else {
+                    console.error('Botão de adicionar patrimônio não encontrado.');
+                }
+            } else {
+                console.log('Não é admin');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao obter dados do usuário:', error.message);
+        });
 
         fetch('http://localhost:8080/patrimony', {
             method: 'GET',
@@ -53,20 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         })
         .catch(error => {
-            console.error('erro:', error.message);
+            console.error('Erro ao obter itens do patrimônio:', error.message);
         });
-        const redirectToAdicionarPatrimonio = () => {
-            window.location.href = 'add/index.html';
-        };
-
-        
-        const btnAddPatrimonio = document.querySelector('.btnAddPatrimonio');
-        if (btnAddPatrimonio) {
-            btnAddPatrimonio.addEventListener('click', redirectToAdicionarPatrimonio);
-        } else {
-            console.error('Botão de adicionar patrimônio não encontrado.');
-        }
     } else {
         console.error('Token JWT não encontrado no localStorage');
     }
 });
+
+const redirectToAdicionarPatrimonio = () => {
+    window.location.href = 'add/index.html';
+};

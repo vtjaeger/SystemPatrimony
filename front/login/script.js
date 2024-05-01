@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(data => {
             console.log('token:', data.token);
             localStorage.setItem('token', data.token); 
-            window.location.href = '/patrimonio/index.html';
+            localStorage.setItem('login', login);
+            console.log(login)
+            window.location.href= '/patrimonio/index.html'
         })
         .catch(error => {
             console.error('erro:', error.message);
