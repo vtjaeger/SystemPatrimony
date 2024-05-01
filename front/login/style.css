@@ -1,0 +1,35 @@
+.div_login {
+    margin: 20px auto; 
+    text-align: center;
+    display: block;
+    border: 1px solid black;
+    border-radius: 6px;
+    width: 300px; 
+    padding: 20px; 
+    background-color: rgba(236, 236, 236, 0.719);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px; 
+}
+
+input {
+    width: 100%; 
+    box-sizing: border-box; 
+    margin-bottom: 10px; 
+}
+
+#checkUserBtn {
+    padding: 7px;
+    background-color: #aaaaaa91;
+    border: none;
+    display: block; 
+    margin: 10px auto 0 auto; 
+    border-radius: 4px;
+    cursor: pointer; 
+}
+
+#checkUserBtn:hover {
+    background-color: #a8a8a8;
+}

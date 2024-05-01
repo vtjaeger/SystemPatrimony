@@ -1,6 +1,5 @@
 package br.patrimony.system.models;
 
-import br.patrimony.system.dtos.requests.user.UserRequest;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,53 +53,23 @@ public class User implements UserDetails {
         switch (this.role) {
             case ADMIN:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
-
             case MANAGER:
                 authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
-
             case COORDINATOR:
                 authorities.add(new SimpleGrantedAuthority("ROLE_COORDINATOR"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
-
             case SPECIALIST:
                 authorities.add(new SimpleGrantedAuthority("ROLE_SPECIALIST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
-
             case ANALYST:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ANALYST"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
-
             case ASSISTANT:
                 authorities.add(new SimpleGrantedAuthority("ROLE_ASSISTANT"));
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                break;
-            default:
-                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 break;
         }
-
         return authorities;
     }
 

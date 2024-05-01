@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("patrimony")
+@CrossOrigin(origins = "*")
 public class PatrimonyController {
     @Autowired
     private PatrimonyService patrimonyService;
