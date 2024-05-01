@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Token no localStorage
+    // token no localstorage
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'Authorization': `Bearer ${token}`
         };
 
-        // Requisição para obter os patrimônios
         fetch('http://localhost:8080/patrimony', {
             method: 'GET',
             headers: headers
@@ -56,8 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('erro:', error.message);
         });
-
-        // Adiciona evento de clique para redirecionar para a página 'adicionar-patrimonio.html'
         const redirectToAdicionarPatrimonio = () => {
             window.location.href = 'add/index.html';
         };
