@@ -7,7 +7,14 @@ public enum UserRole {
     ANALYST("analyst"),
     SPECIALIST("specialist"),
     COORDINATOR("coordinator"),
-    MANAGER("manager");
+    MANAGER("manager"),
+    INSPETOR_CQ("Inspetor CQ"),
+    COORDENADOR_GQ("Coordenador GQ"),
+    TECNICO_TI("Tecnico TI"),
+    LIDER_PRODUCAO("Lider Producao"),
+    COORDENADOR_LOGISTICA("Coordenador Logistica"),
+    GESTOR_EXPEDICAO("Gestor Expedicao"),
+    DIRECAO("Direcao");
 
     private String role;
 
@@ -15,7 +22,7 @@ public enum UserRole {
         this.role = role;
     }
 
-    public String getRole(){
+    public String getRole() {
         return role;
     }
 }

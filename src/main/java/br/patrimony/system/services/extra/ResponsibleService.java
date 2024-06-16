@@ -1,24 +1,24 @@
 package br.patrimony.system.services.extra;
 
+import br.patrimony.system.models.UserRole;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 @Service
 public class ResponsibleService {
-    private final HashMap<String, String> departmentRoles = new HashMap<>();
+    private final HashMap<String, UserRole> departmentRoles = new HashMap<>();
 
     public ResponsibleService() {
-        departmentRoles.put("CQ", "Inspetor CQ");
-        departmentRoles.put("GQ", "Coordenador GQ");
-        departmentRoles.put("TI", "Tecnico TI");
-        departmentRoles.put("PRODUCAO", "Lider Producao");
-        departmentRoles.put("LOG", "Coordenador Logistica");
-        departmentRoles.put("EXP", "Gestor Expedicao");
+        departmentRoles.put("CQ", UserRole.INSPETOR_CQ);
+        departmentRoles.put("GQ", UserRole.COORDENADOR_GQ);
+        departmentRoles.put("TI", UserRole.TECNICO_TI);
+        departmentRoles.put("PRODUCAO", UserRole.LIDER_PRODUCAO);
+        departmentRoles.put("LOG", UserRole.COORDENADOR_LOGISTICA);
+        departmentRoles.put("EXP", UserRole.GESTOR_EXPEDICAO);
     }
 
-    public String determinateResponsible(String departmentName){
-        //se o setor tiver no hash acima, se nao direcao
-        return departmentRoles.getOrDefault(departmentName, "Direcao");
+    public UserRole determinateResponsible(String departmentName){
+        return departmentRoles.getOrDefault(departmentName, UserRole.DIRECAO);
     }
 }

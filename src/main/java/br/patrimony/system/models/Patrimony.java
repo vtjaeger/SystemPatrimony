@@ -16,7 +16,8 @@ public class Patrimony {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
-    private String responsible;
+    @Enumerated(EnumType.STRING)
+    private UserRole responsible;
 
     public Patrimony(PatrimonyRequest patrimonyRequest, Building building, Department department) {
         this.object = patrimonyRequest.object();
@@ -60,11 +61,11 @@ public class Patrimony {
         this.department = department;
     }
 
-    public String getResponsible() {
+    public UserRole getResponsible() {
         return responsible;
     }
 
-    public void setResponsible(String responsible) {
+    public void setResponsible(UserRole responsible) {
         this.responsible = responsible;
     }
 }
