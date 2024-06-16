@@ -1,4 +1,4 @@
-//user logado
+// user logado
 const loginSalvo = localStorage.getItem('login');
 console.log('Login salvo:', loginSalvo);
 
@@ -88,6 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => {
             console.error('Erro ao obter itens do patrimônio:', error.message);
         });
+        
+        const btnGetUsers = document.querySelector('.btnGetUsers');
+        if (btnGetUsers) {
+            btnGetUsers.addEventListener('click', () => {
+                redirectGetUsers();
+            });
+        }
     } else {
         console.error('Token JWT não encontrado no localStorage');
     }
@@ -95,4 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 const redirectToAdicionarPatrimonio = () => {
     window.location.href = 'add/index.html';
+};
+
+const redirectGetUsers = () => {
+    window.location.href = '/users/index.html';
 };
