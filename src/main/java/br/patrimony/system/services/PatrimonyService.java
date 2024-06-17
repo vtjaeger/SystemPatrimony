@@ -60,6 +60,7 @@ public class PatrimonyService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("department not found in this building");
         }
 
+        assert departamentoCorreto != null;
         var responsible = responsibleService.determinateResponsible(departamentoCorreto.getName());
 
         var newPatrimony = new Patrimony(patrimonyRequest, building, departamentoCorreto);
