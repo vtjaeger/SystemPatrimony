@@ -1,0 +1,21 @@
+/* Users.css */
+.user-item {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .user-item p {
+    margin: 5px 0;
+  }
+  
+  .user-item p:first-child {
+    font-weight: bold;
+  }
+  
+  .user-item p:last-child {
+    color: #6c757d;
+  }
+  

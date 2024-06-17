@@ -1,0 +1,65 @@
+/* Patrimony.css */
+#searchPatrimony {
+    margin-bottom: 20px;
+  }
+  
+  #patrimonyName {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  
+  #btnSearchPatrimony {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  #btnSearchPatrimony:hover {
+    background-color: #218838;
+  }
+  
+  .patrimonyItem {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .btnAddPatrimonio {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .btnAddPatrimonio:hover {
+    background-color: #0056b3;
+  }
+  
+  .btnGetUsers {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .btnGetUsers:hover {
+    background-color: #c82333;
+  }
+  
