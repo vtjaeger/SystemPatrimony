@@ -68,6 +68,8 @@ public class PatrimonyService {
 
         var newPatrimony = new Patrimony(patrimonyRequest, category, building, departamentoCorreto);
         newPatrimony.setResponsible(responsible);
+        var revisionDate = extraService.determinateRevisionDate(newPatrimony.getAcquisitionDate());
+        newPatrimony.setRevisionDate(revisionDate);
 
         patrimonyRepository.save(newPatrimony);
 

@@ -3,6 +3,9 @@ package br.patrimony.system.models;
 import br.patrimony.system.dtos.requests.patrimony.PatrimonyRequest;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "tb_patrimony")
 public class Patrimony {
@@ -20,13 +23,15 @@ public class Patrimony {
     private Department department;
     @Enumerated(EnumType.STRING)
     private UserRole responsible;
+    private LocalDate acquisitionDate;
+    private LocalDate revisionDate;
 
     public Patrimony(PatrimonyRequest patrimonyRequest, Category category, Building building, Department department) {
         this.object = patrimonyRequest.object();
         this.category = category;
         this.building = building;
         this.department = department;
-        this.responsible = null;
+        this.acquisitionDate = LocalDate.now();
     }
 
     public Patrimony() {
@@ -78,5 +83,21 @@ public class Patrimony {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public LocalDate getAcquisitionDate() {
+        return acquisitionDate;
+    }
+
+    public void setAcquisitionDate(LocalDate acquisitionDate) {
+        this.acquisitionDate = acquisitionDate;
+    }
+
+    public LocalDate getRevisionDate() {
+        return revisionDate;
+    }
+
+    public void setRevisionDate(LocalDate revisionDate) {
+        this.revisionDate = revisionDate;
     }
 }

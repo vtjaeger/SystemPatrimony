@@ -24,14 +24,14 @@ public class PatrimonyController {
         return patrimonyService.getAllPatrimony();
     }
 
-    @GetMapping("/{buildingName}/{departmentName}")
-    public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
-        return patrimonyService.getAllPatrimonyFromDepartment(buildingName, departmentName);
-    }
-
     @GetMapping("/{patrimonyName}")
     public ResponseEntity getByPatrimony(@PathVariable String patrimonyName){
         return patrimonyService.getByPatrimonyName(patrimonyName);
+    }
+
+    @GetMapping("/{buildingName}/{departmentName}")
+    public ResponseEntity getAllPatrimonyFromDepartment(@PathVariable String buildingName, @PathVariable String departmentName){
+        return patrimonyService.getAllPatrimonyFromDepartment(buildingName, departmentName);
     }
 
     @GetMapping("/category/{category}")

@@ -4,6 +4,7 @@ import br.patrimony.system.models.Category;
 import br.patrimony.system.models.UserRole;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 @Service
@@ -27,7 +28,6 @@ public class ExtraService {
         categories.put("cadeira", Category.FURNITURE);
         categories.put("envasadora", Category.MACHINERY);
         categories.put("maquina", Category.MACHINERY);
-
     }
 
     public UserRole determinateResponsible(String departmentName){
@@ -36,5 +36,9 @@ public class ExtraService {
 
     public Category determinateCategory(String objectName) {
         return categories.getOrDefault(objectName.toLowerCase(), Category.OTHER);
+    }
+
+    public LocalDate determinateRevisionDate(LocalDate acquisitionDate){
+        return acquisitionDate.plusYears(1);
     }
 }
