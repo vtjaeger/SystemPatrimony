@@ -8,7 +8,7 @@ import br.patrimony.system.models.Patrimony;
 import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.DepartmentRepository;
 import br.patrimony.system.repositories.PatrimonyRepository;
-import br.patrimony.system.services.extra.ResponsibleService;
+import br.patrimony.system.services.extra.ExtraService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,7 +31,7 @@ public class PatrimonyService {
     @Autowired
     private BuildingRepository buildingRepository;
     @Autowired
-    private ResponsibleService responsibleService;
+    private ExtraService extraService;
 
     public ResponseEntity registerPatrimony(@RequestBody @Valid PatrimonyRequest patrimonyRequest){
         Optional<Building> buildingOptional = Optional.ofNullable(buildingRepository.findByName(patrimonyRequest.building()));
@@ -61,9 +61,10 @@ public class PatrimonyService {
         }
 
         assert departamentoCorreto != null;
-        var responsible = responsibleService.determinateResponsible(departamentoCorreto.getName());
+        var responsible = extraService.determinateResponsible(departamentoCorreto.getName());
+        var category = extraService.determinateCategory(patrimonyRequest.object());
 
-        var newPatrimony = new Patrimony(patrimonyRequest, building, departamentoCorreto);
+        var newPatrimony = new Patrimony(patrimonyRequest, category, building, departamentoCorreto);
         newPatrimony.setResponsible(responsible);
 
         patrimonyRepository.save(newPatrimony);
@@ -71,6 +72,7 @@ public class PatrimonyService {
         PatrimonyResponse response = new PatrimonyResponse(
                 newPatrimony.getId(),
                 newPatrimony.getObject(),
+                newPatrimony.getCategory(),
                 newPatrimony.getBuilding().getName(),
                 newPatrimony.getDepartment().getName(),
                 newPatrimony.getResponsible().getRole()
@@ -85,6 +87,7 @@ public class PatrimonyService {
                 .map(patrimony -> new PatrimonyResponse(
                         patrimony.getId(),
                         patrimony.getObject(),
+                        patrimony.getCategory(),
                         patrimony.getBuilding().getName(),
                         patrimony.getDepartment().getName(),
                         patrimony.getResponsible().getRole())
@@ -125,6 +128,7 @@ public class PatrimonyService {
                 .map(patrimony -> new PatrimonyResponse(
                         patrimony.getId(),
                         patrimony.getObject(),
+                        patrimony.getCategory(),
                         patrimony.getBuilding().getName(),
                         patrimony.getDepartment().getName(),
                         patrimony.getResponsible().getRole())
@@ -140,8 +144,13 @@ public class PatrimonyService {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("patrimony not found");
         }
         var patrimony = patrimonyOptional.get();
-        var response = new PatrimonyResponse(patrimony.getId(), patrimony.getObject(), patrimony.getBuilding().getName(),
-                patrimony.getDepartment().getName(), patrimony.getResponsible().getRole());
+        var response = new PatrimonyResponse(
+                patrimony.getId(),
+                patrimony.getObject(),
+                patrimony.getCategory(),
+                patrimony.getBuilding().getName(),
+                patrimony.getDepartment().getName(),
+                patrimony.getResponsible().getRole());
 
         return ResponseEntity.ok().body(response);
     }

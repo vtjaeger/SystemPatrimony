@@ -10,6 +10,8 @@ public class Patrimony {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String object;
+    @Enumerated(EnumType.STRING)
+    private Category category;
     @ManyToOne
     @JoinColumn(name = "building_id")
     private Building building;
@@ -19,8 +21,9 @@ public class Patrimony {
     @Enumerated(EnumType.STRING)
     private UserRole responsible;
 
-    public Patrimony(PatrimonyRequest patrimonyRequest, Building building, Department department) {
+    public Patrimony(PatrimonyRequest patrimonyRequest, Category category, Building building, Department department) {
         this.object = patrimonyRequest.object();
+        this.category = category;
         this.building = building;
         this.department = department;
         this.responsible = null;
@@ -67,5 +70,13 @@ public class Patrimony {
 
     public void setResponsible(UserRole responsible) {
         this.responsible = responsible;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }
