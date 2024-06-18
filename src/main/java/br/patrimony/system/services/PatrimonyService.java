@@ -3,6 +3,7 @@ package br.patrimony.system.services;
 import br.patrimony.system.dtos.requests.patrimony.PatrimonyRequest;
 import br.patrimony.system.dtos.responses.patrimony.PatrimonyResponse;
 import br.patrimony.system.models.Building;
+import br.patrimony.system.models.Category;
 import br.patrimony.system.models.Department;
 import br.patrimony.system.models.Patrimony;
 import br.patrimony.system.repositories.BuildingRepository;
@@ -10,6 +11,7 @@ import br.patrimony.system.repositories.DepartmentRepository;
 import br.patrimony.system.repositories.PatrimonyRepository;
 import br.patrimony.system.services.extra.ExtraService;
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -151,6 +153,29 @@ public class PatrimonyService {
                 patrimony.getBuilding().getName(),
                 patrimony.getDepartment().getName(),
                 patrimony.getResponsible().getRole());
+
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity getByCategory(String categoryParam){
+        Category category;
+        try {
+            category = Category.valueOf(categoryParam.toUpperCase());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        }
+        List<Patrimony> patrimonies = patrimonyRepository.findAllByCategory(category);
+
+        List<PatrimonyResponse> response = patrimonies.stream()
+                .map(patrimony -> new PatrimonyResponse(
+                        patrimony.getId(),
+                        patrimony.getObject(),
+                        patrimony.getCategory(),
+                        patrimony.getBuilding().getName(),
+                        patrimony.getDepartment().getName(),
+                        patrimony.getResponsible().getRole())
+                )
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok().body(response);
     }

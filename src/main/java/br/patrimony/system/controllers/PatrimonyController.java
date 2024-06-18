@@ -33,4 +33,9 @@ public class PatrimonyController {
     public ResponseEntity getByPatrimony(@PathVariable String patrimonyName){
         return patrimonyService.getByPatrimonyName(patrimonyName);
     }
+
+    @GetMapping("/category/{category}")
+    public ResponseEntity getByCategory(@PathVariable String category) {
+        return patrimonyService.getByCategory(category);
+    }
 }
