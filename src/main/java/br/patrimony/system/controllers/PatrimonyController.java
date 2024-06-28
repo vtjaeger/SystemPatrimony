@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @RequestMapping("patrimony")
 @CrossOrigin(origins = "*")
@@ -37,5 +39,11 @@ public class PatrimonyController {
     @GetMapping("/category/{category}")
     public ResponseEntity getByCategory(@PathVariable String category) {
         return patrimonyService.getByCategory(category);
+    }
+
+    @GetMapping("/acquired-before/{date}")
+    public ResponseEntity getAcquisitionBefore(@PathVariable String date){
+        LocalDate localDate = LocalDate.parse(date);
+        return patrimonyService.getAllAcquiredBefore(localDate);
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -179,6 +180,22 @@ public class PatrimonyService {
                 )
                 .collect(Collectors.toList());
 
+        return ResponseEntity.ok().body(response);
+    }
+
+    public ResponseEntity getAllAcquiredBefore(LocalDate date) {
+        List<Patrimony> patrimonies = patrimonyRepository.findAllAcquiredBefore(date);
+
+        List<PatrimonyResponse> response = patrimonies.stream()
+                .map(p -> new PatrimonyResponse(
+                        p.getId(),
+                        p.getObject(),
+                        p.getCategory(),
+                        p.getBuilding().getName(),
+                        p.getDepartment().getName(),
+                        p.getResponsible().getRole()
+                ))
+                .collect(Collectors.toList());
         return ResponseEntity.ok().body(response);
     }
 }
