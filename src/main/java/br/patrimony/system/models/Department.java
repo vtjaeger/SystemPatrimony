@@ -26,6 +26,13 @@ public class Department {
         this.patrimonies = patrimonies;
     }
 
+    public Department(Long id, String name, Building building, List<Patrimony> patrimonies) {
+        this.id = id;
+        this.name = name;
+        this.building = building;
+        this.patrimonies = patrimonies;
+    }
+
     public Department() {
     }
 

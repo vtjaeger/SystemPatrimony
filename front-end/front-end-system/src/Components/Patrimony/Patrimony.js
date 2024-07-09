@@ -51,6 +51,7 @@ const Patrimony = () => {
                 {patrimonies.map((item) => (
                     <div key={item.id} className="patrimonyItem">
                         <p>Object: {item.object}</p>
+                        <p>Object: {item.category}</p>
                         <p>Building: {item.building}</p>
                         <p>Department: {item.department}</p>
                         <p>Responsible: {item.responsible}</p>

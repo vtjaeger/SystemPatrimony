@@ -34,6 +34,17 @@ public class Patrimony {
         this.acquisitionDate = LocalDate.now();
     }
 
+    public Patrimony(String object, Category category, Building building, Department department, UserRole responsible,
+                     LocalDate acquisitionDate, LocalDate revisionDate) {
+        this.object = object;
+        this.category = category;
+        this.building = building;
+        this.department = department;
+        this.responsible = responsible;
+        this.acquisitionDate = acquisitionDate;
+        this.revisionDate = revisionDate;
+    }
+
     public Patrimony() {
     }
 
