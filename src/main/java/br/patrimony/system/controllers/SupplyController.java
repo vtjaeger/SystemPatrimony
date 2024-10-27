@@ -1,6 +1,6 @@
 package br.patrimony.system.controllers;
 
-import br.patrimony.system.dtos.requests.raw.SupplyRequest;
+import br.patrimony.system.dtos.requests.supply.SupplyRequest;
 import br.patrimony.system.services.SupplyService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class SupplyController {
     }
 
     @PostMapping
-    public ResponseEntity registerRaw(@RequestBody @Valid SupplyRequest supplyRequest){
+    public ResponseEntity registerSupply(@RequestBody @Valid SupplyRequest supplyRequest){
         return supplyService.registerSupply(supplyRequest);
     }
 }

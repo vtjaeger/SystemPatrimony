@@ -1,7 +1,8 @@
 package br.patrimony.system.models;
 
-import br.patrimony.system.dtos.requests.raw.SupplyRequest;
+import br.patrimony.system.dtos.requests.supply.SupplyRequest;
 import jakarta.persistence.*;
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 @Entity
 @Table(name = "tb_supply")
@@ -13,13 +14,16 @@ public class Supply {
     private int quantity;
     private Double kilograms;
     private Double cost;
+    @ManyToOne
+    @JoinColumn(name = "building_id")
+    private Building building;
     private String status;
 
-    public Supply(SupplyRequest supplyRequest) {
+    public Supply(SupplyRequest supplyRequest, Building building) {
         this.item = supplyRequest.item();
         this.quantity = supplyRequest.quantity();
-        this.kilograms = supplyRequest.kilograms();
         this.cost = supplyRequest.cost();
+        this.building = building;
         this.status = supplyRequest.status();
     }
 
@@ -64,6 +68,14 @@ public class Supply {
 
     public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public Building getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(Building building) {
+        this.building = building;
     }
 
     public String getStatus() {

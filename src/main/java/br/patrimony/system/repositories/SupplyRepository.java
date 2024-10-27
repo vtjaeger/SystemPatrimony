@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SupplyRepository extends JpaRepository<Supply, Long> {
+    Supply findByItem(String item);
 }
