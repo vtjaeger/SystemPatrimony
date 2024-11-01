@@ -17,14 +17,14 @@ public class Supply {
     @ManyToOne
     @JoinColumn(name = "building_id")
     private Building building;
-    private String status;
+    private Status status;
 
     public Supply(SupplyRequest supplyRequest, Building building) {
         this.item = supplyRequest.item();
         this.quantity = supplyRequest.quantity();
         this.cost = supplyRequest.cost();
         this.building = building;
-        this.status = supplyRequest.status();
+        this.status = Status.AVAILABLE;
     }
 
     public Supply() {
@@ -78,12 +78,11 @@ public class Supply {
         this.building = building;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
-
 }

@@ -4,6 +4,7 @@ import br.patrimony.system.dtos.requests.supply.SupplyRequest;
 import br.patrimony.system.dtos.requests.supply.TransferBuildingRequest;
 import br.patrimony.system.dtos.responses.supply.SupplyResponse;
 import br.patrimony.system.models.Building;
+import br.patrimony.system.models.Status;
 import br.patrimony.system.models.Supply;
 import br.patrimony.system.repositories.BuildingRepository;
 import br.patrimony.system.repositories.SupplyRepository;
@@ -132,7 +133,7 @@ public class SupplyService {
         }
 
         if(supply.getQuantity() <= 0) {
-            supply.setStatus("inativo");
+            supply.setStatus(Status.MISSING);
         }
 
         supply.setQuantity(supply.getQuantity() - request.quantity());
