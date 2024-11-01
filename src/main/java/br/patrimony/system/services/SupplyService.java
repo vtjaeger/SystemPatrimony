@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -26,76 +25,86 @@ public class SupplyService {
     @Autowired
     private BuildingRepository buildingRepository;
 
-    private final HashMap<String, Double> costPerItem = new HashMap<>(){{
+    private final HashMap<String, Double> costPerItem = new HashMap<>() {{
         put("teste", 10.0);
         put("essencia", 2.5);
         put("embalagem", 1.2);
     }};
-    private final HashMap<String, Double> kilogramsPerItem = new HashMap<>(){{
+    private final HashMap<String, Double> kilogramsPerItem = new HashMap<>() {{
         put("teste", 2.0);
         put("essencia", 1.1);
         put("embalagem", 0.5);
     }};
 
-    public ResponseEntity getAllSupplys(){
+    public ResponseEntity getAllSupplys() {
         List<Supply> supplies = supplyRepository.findAll();
         List<SupplyResponse> response = supplies.stream()
                 .map(r -> new SupplyResponse(
-                        r.getId(),
-                        r.getItem(),
-                        r.getQuantity(),
-                        r.getKilograms(),
-                        r.getBuilding().getName(),
-                        r.getCost(),
-                        r.getStatus()
-                )
+                                r.getId(),
+                                r.getItem(),
+                                r.getQuantity(),
+                                r.getKilograms(),
+                                r.getBuilding().getName(),
+                                r.getCost(),
+                                r.getStatus()
+                        )
                 ).collect(Collectors.toList());
         return ResponseEntity.ok().body(response);
     }
 
-    public ResponseEntity registerSupply(SupplyRequest supplyRequest){
-        if(buildingRepository.findByName(supplyRequest.building()) == null) {
+    public ResponseEntity registerSupply(SupplyRequest supplyRequest) {
+        if (buildingRepository.findByName(supplyRequest.building()) == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("building does not exist, contact the admin");
-        }
-        else {
-            Supply existingSupply = supplyRepository.findByItem(supplyRequest.item());
-            // valor default se nao tiver no hashmap
-            Double unitCost = costPerItem.getOrDefault(supplyRequest.item(), 0.0);
-            Double unitKilograms = kilogramsPerItem.getOrDefault(supplyRequest.item(), 0.0);
+        } else {
+            Building building = buildingRepository.findByName(supplyRequest.building());
+            Optional<Supply> existingSupply = supplyRepository.findByItemAndBuildingId(supplyRequest.item(), building.getId());
 
-            if(existingSupply != null) {
-                existingSupply.setQuantity(existingSupply.getQuantity() + supplyRequest.quantity());
+            // valor padrao se estiver fora do hash
+            Double unitCost = costPerItem.getOrDefault(supplyRequest.item(), 1.0);
+            Double unitKilograms = kilogramsPerItem.getOrDefault(supplyRequest.item(), 1.0);
+
+            if (existingSupply.isPresent()) {
+                var supply = existingSupply.get();
+
+                supply.setQuantity(supply.getQuantity() + supplyRequest.quantity());
 
                 double updatedCost = unitCost * supplyRequest.quantity();
-                existingSupply.setCost(existingSupply.getCost() + updatedCost);
+                supply.setCost(supply.getCost() + updatedCost);
 
                 double updatedKilograms = unitKilograms * supplyRequest.quantity();
-                existingSupply.setKilograms(existingSupply.getKilograms() + updatedKilograms);
+                supply.setKilograms(supply.getKilograms() + updatedKilograms);
 
-                supplyRepository.save(existingSupply);
+                supplyRepository.save(supply);
                 return ResponseEntity.ok().body(new SupplyResponse(
-                        existingSupply.getId(),
-                        existingSupply.getItem(),
-                        existingSupply.getQuantity(),
-                        existingSupply.getKilograms(),
-                        existingSupply.getBuilding().getName(),
-                        existingSupply.getCost(),
-                        existingSupply.getStatus()));
+                        supply.getId(),
+                        supply.getItem(),
+                        supply.getQuantity(),
+                        supply.getKilograms(),
+                        supply.getBuilding().getName(),
+                        supply.getCost(),
+                        supply.getStatus()));
             }
-            var building = buildingRepository.findByName(supplyRequest.building());
-            if(building != null) {
-                var supply = new Supply(supplyRequest, building);
-                double initialCost = unitCost * supplyRequest.quantity();
-                double initialKilograms = unitKilograms * supplyRequest.quantity();
 
-                supply.setCost(initialCost);
-                supply.setKilograms(initialKilograms);
-                Supply newSupply = supplyRepository.save(supply);
-                return ResponseEntity.ok().body(newSupply);
-            }
+            Supply newSupply = new Supply();
+            newSupply.setItem(supplyRequest.item());
+            newSupply.setQuantity(supplyRequest.quantity());
+            newSupply.setBuilding(building);
+            newSupply.setCost(unitCost * supplyRequest.quantity());
+            newSupply.setKilograms(unitKilograms * supplyRequest.quantity());
+            newSupply.setStatus(Status.AVAILABLE);
+
+            Supply savedSupply = supplyRepository.save(newSupply);
+
+            return ResponseEntity.ok(new SupplyResponse(
+                    savedSupply.getId(),
+                    savedSupply.getItem(),
+                    savedSupply.getQuantity(),
+                    savedSupply.getKilograms(),
+                    savedSupply.getBuilding().getName(),
+                    savedSupply.getCost(),
+                    savedSupply.getStatus()
+            ));
         }
-        // return aleatorio
-        return null;
     }
 
     public ResponseEntity<SupplyResponse> transferBuilding(Long id, TransferBuildingRequest request) {
@@ -109,7 +118,7 @@ public class SupplyService {
         Supply supply = supplyOptional.get();
         Building newBuilding = buildingOptional.get();
 
-        if(request.to().equals(supply.getBuilding().getId())) {
+        if (request.to().equals(supply.getBuilding().getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
@@ -117,7 +126,7 @@ public class SupplyService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        if(request.quantity() == supply.getQuantity()) {
+        if (request.quantity() == supply.getQuantity()) {
             supply.setBuilding(newBuilding);
             supplyRepository.save(supply);
 
@@ -132,7 +141,7 @@ public class SupplyService {
             ));
         }
 
-        if(supply.getQuantity() <= 0) {
+        if (supply.getQuantity() <= 0) {
             supply.setStatus(Status.MISSING);
         }
 
@@ -150,10 +159,10 @@ public class SupplyService {
         double costNewSupply = cosItem * request.quantity();
         double kilogramsNewSupply = kilogramsItem * request.quantity();
 
-        Optional<Supply> existingSupplyOptional = supplyRepository.findByItemAndBuildingId(supply.getItem(), newBuilding.getId());
+        Optional<Supply> existingsSupplyOptional = supplyRepository.findByItemAndBuildingId(supply.getItem(), newBuilding.getId());
 
-        if (existingSupplyOptional.isPresent()) {
-            Supply existingSupply = existingSupplyOptional.get();
+        if (existingsSupplyOptional.isPresent()) {
+            Supply existingSupply = existingsSupplyOptional.get();
             existingSupply.setQuantity(existingSupply.getQuantity() + request.quantity());
             existingSupply.setCost(existingSupply.getCost() + costNewSupply);
             existingSupply.setKilograms(existingSupply.getKilograms() + kilogramsNewSupply);
