@@ -1,12 +1,11 @@
 package br.patrimony.system.models;
 
-import br.patrimony.system.dtos.requests.supply.SupplyRequest;
+import br.patrimony.system.dtos.requests.inventory.InventoryRequest;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 @Entity
-@Table(name = "tb_supply")
-public class Supply {
+@Table(name = "tb_inventory")
+public class Inventory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,17 +16,18 @@ public class Supply {
     @ManyToOne
     @JoinColumn(name = "building_id")
     private Building building;
+    @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    public Supply(SupplyRequest supplyRequest, Building building) {
-        this.item = supplyRequest.item();
-        this.quantity = supplyRequest.quantity();
-        this.cost = supplyRequest.cost();
+    public Inventory(InventoryRequest inventoryRequest, Building building) {
+        this.item = inventoryRequest.item();
+        this.quantity = inventoryRequest.quantity();
+        this.cost = inventoryRequest.cost();
         this.building = building;
         this.status = Status.AVAILABLE;
     }
 
-    public Supply() {
+    public Inventory() {
     }
 
     public Long getId() {
