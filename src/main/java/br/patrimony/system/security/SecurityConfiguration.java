@@ -27,9 +27,10 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/supply").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/supply/***").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/supply").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/inventory").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/inventory/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/inventory/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/inventory").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/register").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/patrimony").hasAnyRole("COORDINATOR", "MANAGER",
                                 "SPECIALIST", "ADMIN")

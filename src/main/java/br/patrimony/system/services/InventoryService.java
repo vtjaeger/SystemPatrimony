@@ -1,6 +1,8 @@
 package br.patrimony.system.services;
 
+import br.patrimony.system.dtos.requests.inventory.AddQuantity;
 import br.patrimony.system.dtos.requests.inventory.InventoryRequest;
+import br.patrimony.system.dtos.requests.inventory.RemoveQuantity;
 import br.patrimony.system.dtos.requests.inventory.TransferBuildingRequest;
 import br.patrimony.system.dtos.responses.inventory.InventoryResponse;
 import br.patrimony.system.models.Building;
@@ -40,13 +42,13 @@ public class InventoryService {
         List<Inventory> inventories = inventoryRepository.findAll();
         List<InventoryResponse> response = inventories.stream()
                 .map(i -> new InventoryResponse(
-                            i.getId(),
-                            i.getItem(),
-                            i.getQuantity(),
-                            i.getKilograms(),
-                            i.getBuilding().getName(),
-                            i.getCost(),
-                            i.getStatus()
+                                i.getId(),
+                                i.getItem(),
+                                i.getQuantity(),
+                                i.getKilograms(),
+                                i.getBuilding().getName(),
+                                i.getCost(),
+                                i.getStatus()
                         )
                 ).collect(Collectors.toList());
         return ResponseEntity.ok().body(response);
@@ -148,16 +150,16 @@ public class InventoryService {
 
         inventory.setQuantity(inventory.getQuantity() - request.quantity());
 
-        Double cosItem = costPerItem.getOrDefault(inventory.getItem(), 0.0);
+        Double cost = costPerItem.getOrDefault(inventory.getItem(), 0.0);
         Double kilogramsItem = kilogramsPerItem.getOrDefault(inventory.getItem(), 0.0);
 
-        double costSupply = cosItem * inventory.getQuantity();
+        double costSupply = cost * inventory.getQuantity();
         double kilogramSupply = kilogramsItem * inventory.getQuantity();
         inventory.setCost(costSupply);
         inventory.setKilograms(kilogramSupply);
         inventoryRepository.save(inventory);
 
-        double costNewSupply = cosItem * request.quantity();
+        double costNewSupply = cost * request.quantity();
         double kilogramsNewSupply = kilogramsItem * request.quantity();
 
         Optional<Inventory> existingsSupplyOptional = inventoryRepository.findByItemAndBuildingId(inventory.getItem(), newBuilding.getId());
@@ -197,5 +199,72 @@ public class InventoryService {
                     newSupply.getCost(),
                     newSupply.getStatus()));
         }
+    }
+
+    public ResponseEntity removeQuantity(Long id, RemoveQuantity dto) {
+        Optional<Inventory> inventoryOptional = inventoryRepository.findById(id);
+        if (inventoryOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        var item = inventoryOptional.get();
+        if (dto.quantity() > item.getQuantity()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Double costPerUnit = costPerItem.getOrDefault(item.getItem(), 0.0);
+        Double kilogramsPerUnit = kilogramsPerItem.getOrDefault(item.getItem(), 0.0);
+        item.setQuantity(item.getQuantity() - dto.quantity());
+
+        Double reducedCost = costPerUnit * dto.quantity();
+        item.setCost(item.getCost() - reducedCost);
+
+        Double reducedKilograms = kilogramsPerUnit * dto.quantity();
+        item.setKilograms(item.getKilograms() - reducedKilograms);
+
+        inventoryRepository.save(item);
+
+        return ResponseEntity.ok().body(new InventoryResponse(
+                item.getId(),
+                item.getItem(),
+                item.getQuantity(),
+                item.getKilograms(),
+                item.getBuilding().getName(),
+                item.getCost(),
+                item.getStatus()
+        ));
+    }
+
+    public ResponseEntity addQuantity(Long id, AddQuantity dto){
+        Optional<Inventory> inventoryOptional = inventoryRepository.findById(id);
+        if (inventoryOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        var item = inventoryOptional.get();
+        if (dto.quantity() > item.getQuantity()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+        Double costPerUnit = costPerItem.getOrDefault(item.getItem(), 0.0);
+        Double kilogramsPerUnit = kilogramsPerItem.getOrDefault(item.getItem(), 0.0);
+
+        item.setQuantity(item.getQuantity() + dto.quantity());
+
+        Double updatedCost = costPerUnit * dto.quantity();
+        item.setCost(item.getCost() + updatedCost);
+
+        Double updatedKilograms = kilogramsPerUnit * dto.quantity();
+        item.setKilograms(item.getKilograms() + updatedKilograms);
+
+        inventoryRepository.save(item);
+
+        return ResponseEntity.ok().body(new InventoryResponse(
+                item.getId(),
+                item.getItem(),
+                item.getQuantity(),
+                item.getKilograms(),
+                item.getBuilding().getName(),
+                item.getCost(),
+                item.getStatus()
+        ));
     }
 }
